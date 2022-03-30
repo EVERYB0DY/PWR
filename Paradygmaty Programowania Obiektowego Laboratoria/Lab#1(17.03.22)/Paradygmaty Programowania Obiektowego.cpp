@@ -18,6 +18,7 @@ private:
 	string nazwisko;
 	string pesel;
 	string dataUrodzenia;
+	void DataUrodzenia(string pesel);
 
 public:
 	//string imie;
@@ -27,8 +28,8 @@ public:
 
 	void setImie(string imie);
 	void setNazwisko(string nazwisko);
-	int setPesel(string pesel);
-	void setDataUrodzenia(string dataUrodzenia);
+	void setPesel(string pesel);
+	//void setDataUrodzenia(string dataUrodzenia);
 
 	string getImie();
 	string getNazwisko();
@@ -46,16 +47,54 @@ void cOsoba::setNazwisko(string nazwisko)
 	this->nazwisko = nazwisko;
 }
 
-int cOsoba::setPesel(string pesel)
+void cOsoba::DataUrodzenia(string pesel)
 {
-	this->pesel = pesel;
-	return 0;
+	string data;
+	if (pesel[2] > '1')
+	{
+		data = pesel[4];
+		data += pesel[5];
+		data += "/";
+		data += ((int)pesel[2] - 2);
+		data += pesel[3];
+		data += "/";
+		data += "20";
+		data += pesel[0];
+		data += pesel[1];
+	}
+	else
+	{
+		data = pesel[4];
+		data += pesel[5];
+		data += "/";
+		data += pesel[2];
+		data += pesel[3];
+		data += "/";
+		data += "19";
+		data += pesel[0];
+		data += pesel[1];
+	}
+
+	this->dataUrodzenia = data;
 }
 
-void cOsoba::setDataUrodzenia(string dataUrodzenia)
+void cOsoba::setPesel(string pesel)
+{
+	if (pesel.size() == 11)
+	{
+		this->pesel = pesel;
+		DataUrodzenia(pesel);
+	}
+	else
+	{
+		cout << "\n\n\t\t!!!!!!UWAGA!!!!!!!          Nieprawidlowy pesel.\n\n\n\n";
+	}
+}
+
+/*void cOsoba::setDataUrodzenia(string dataUrodzenia)
 {
 	this->dataUrodzenia = dataUrodzenia;
-}
+}*/
 
 string cOsoba::getImie()
 {
@@ -84,7 +123,7 @@ int main()
 	anon.setImie("Anon");
 	anon.setNazwisko("Anonowicz");
 	anon.setPesel("01232567890");
-	anon.setDataUrodzenia("25/03/2001");
+	//anon.setDataUrodzenia("25/03/2001");
 
 	sOsoba anon2;
 	anon2.imie = "Anon";
