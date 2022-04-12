@@ -116,10 +116,15 @@ string cOsoba::getDataUrodzenia()
 	return dataUrodzenia;
 }
 
-class ListaOsob
+class cListaOsob
 {
 private:
+	struct{
+		bool obecnosc[30] = { NULL };
+		string dataZajec;
+	}listaObecnosci[15];
 	cOsoba osoby[30];
+
 public:
 	int dodajOsobe(cOsoba osoba); // Zwraca: 0 -> sukces		1 -> taka osoba już jest na liście		2 -> brak miejsca na liście osób
 	void wyswietlListe();
@@ -127,13 +132,95 @@ public:
 	void wyswietlObecnosc(cOsoba osoba, string data);
 };
 
-int ListaOsob::dodajOsobe(cOsoba osoba)
+int cListaOsob::dodajOsobe(cOsoba osoba)
 {
 	for (size_t i = 0; i < 30; i++)
 	{
-		if ()
+		if(this->osoby[i].getImie() != "")
 		{
+			if (this->osoby[i].getImie() == osoba.getImie() && this->osoby[i].getNazwisko() == osoba.getNazwisko() && this->osoby[i].getPesel() == osoba.getPesel())
+			{
+				return 1;
+			}
+		}
+		else
+		{
+			this->osoby[i] = osoba;
+			return 0;
+		}
+	}
+	return 2;
+}
 
+void cListaOsob::wyswietlListe()
+{
+	system("CLS");
+	for (size_t i = 0; i < 30; i++)
+	{
+		cout << i << ". " << this->osoby[i].getImie() << " " << this->osoby[i].getNazwisko() << " " << this->osoby[i].getDataUrodzenia() << " " << this->osoby[i].getPesel() << endl;
+	}
+}
+
+int cListaOsob::ustawObecnosc(cOsoba osoba, string data, bool czyObecny)
+{
+	int numerNaLiscie = NULL;
+	for (size_t i = 0; i < 30; i++)
+	{
+		if (this->osoby[i].getImie() == osoba.getImie() && this->osoby[i].getNazwisko() == osoba.getNazwisko() && this->osoby[i].getPesel() == osoba.getPesel())
+		{
+			numerNaLiscie = i;
+		}
+	}
+
+	if (numerNaLiscie == NULL)
+	{
+		return 1;
+	}
+
+	for (size_t i = 0; i < 15; i++)
+	{
+		if (this->listaObecnosci[i].dataZajec == "")
+		{
+			this->listaObecnosci[i].dataZajec = data;
+		}
+
+		if (this->listaObecnosci[i].dataZajec == data)
+		{
+			if (this->listaObecnosci[i].obecnosc[numerNaLiscie] == NULL)
+			{
+				this->listaObecnosci[i].obecnosc[numerNaLiscie] = czyObecny;
+				return 0;
+			}
+			return 3;
+		}
+		
+	}
+	return 2;
+}
+
+void cListaOsob::wyswietlObecnosc(cOsoba osoba, string data)
+{
+	int numerNaLiscie = NULL;
+	for (size_t i = 0; i < 30; i++)
+	{
+		if (this->osoby[i].getImie() == osoba.getImie() && this->osoby[i].getNazwisko() == osoba.getNazwisko() && this->osoby[i].getPesel() == osoba.getPesel())
+		{
+			numerNaLiscie = i;
+		}
+	}
+
+	for (size_t i = 0; i < 15; i++)
+	{
+		if (this->listaObecnosci[i].dataZajec == data)
+		{
+			if (this->listaObecnosci[i].obecnosc[numerNaLiscie] == true)
+			{
+				cout << "osoba byla obecna" << endl;
+			}
+			else
+			{
+				cout << "osoba byla nieobecna" << endl;
+			}
 		}
 	}
 }
@@ -151,6 +238,9 @@ int main()
 	anon2.nazwisko = "Anonowicz";
 	anon2.pesel = "01232567890";
 	anon2.dataUrodzenia = "25/03/2001";
+
+	cListaOsob test;
+
 
 	cout << "Klasa" << endl << endl;
 
