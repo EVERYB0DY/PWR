@@ -4,7 +4,12 @@
 
 using namespace std;
 
-int Interfejs::menuListyObecnosci()
+Interfejs::Interfejs(ListaObecnosci* lista)
+{
+    this->menuListyObecnosci(lista);
+}
+
+int Interfejs::menuListyObecnosci(ListaObecnosci* lista)
 {
     while (true)
     {
@@ -24,22 +29,31 @@ int Interfejs::menuListyObecnosci()
         {
         case 1:
             system("cls");
-            if (this->lista.wyswietlListe() == 1)
+            if (lista->wyswietlListe(0) == to_string(NULL))
             {
-                cout << "Lista pusta, dodaj studenta.\n";
+                cout << "Lista pusta, dodaj studenta\n";
+            }
+            else
+            {
+                for (int i = 0; i < 30; i++)
+                {
+                    if (lista->wyswietlListe(i) == to_string(NULL))
+                        break;
+                    cout << i + 1 << ". " << lista->wyswietlListe(i) << endl;
+                }
             }
             break;
         case 2:
             system("cls");
-            this->menuFabrykiStudentow();
+            this->menuFabrykiStudentow(lista);
             break;
         case 3:
             system("cls");
-            this->ustawianieObecnosciStudentow();
+            this->ustawianieObecnosciStudentow(lista);
             break;
         case 4:
             system("cls");
-            this->wyswietlanieObecnosciStudentow();
+            this->wyswietlanieObecnosciStudentow(lista);
             break;
         case 5:
             return 0;
@@ -50,10 +64,13 @@ int Interfejs::menuListyObecnosci()
     }
 }
 
-int Interfejs::menuFabrykiStudentow()
+int Interfejs::menuFabrykiStudentow(ListaObecnosci* lista)
 {
     FabrykaStudentow* fabryka{};
     Student* student{};
+
+    string imie, nazwisko, identyfikator, dataUrodzenia;
+    int nrAlbumu;
 
     int opcja = 0;
     cout << "Jakiej narodowosci jest student?\n";
@@ -67,16 +84,80 @@ int Interfejs::menuFabrykiStudentow()
     switch (opcja)
     {
     case 1:
-        fabryka = new FabrykaPolakow;
-        student = fabryka->stoworzStudenta();
         system("cls");
-        this->dodawanieStudentow(student);
+
+        cout << "Prosze podac imie studenta: ";
+        cin >> imie;
+
+        cout << "Prosze podac nazwisko studenta: ";
+        cin >> nazwisko;
+
+
+        cout << "Prosze podac numer albumu studenta: ";
+        cin >> nrAlbumu;
+
+
+        cout << "Prosze podac identyfikator studenta: ";
+        cin >> identyfikator;
+
+
+        cout << "Prosze podac date urodzenia studenta (dd/mm/rrrr): ";
+        cin >> dataUrodzenia;
+
+        system("cls");
+
+        fabryka = new FabrykaPolakow;
+        student = fabryka->stoworzStudenta(imie,nazwisko,identyfikator,dataUrodzenia,nrAlbumu);
+        if (student == NULL)
+        {
+            cout << "Nie dodano studenta.\n";
+            break;
+        }
+        else
+        {
+            switch (lista->dodajOsobe(student))
+            {
+            case 0:
+                cout << "Dodano studenta\n";
+                break;
+            case 1:
+                cout << "Student jest juz na liscie\n";
+                break;
+            case 2:
+                cout << "Brak miejsca na liscie.\n";
+                break;
+            default:
+                break;
+            }
+        }
+        
+
         break;
     case 2:
-        fabryka = new FabrykaPortugalczykow;
-        student = fabryka->stoworzStudenta();
         system("cls");
-        this->dodawanieStudentow(student);
+
+        cout << "Prosze podac imie studenta: ";
+        cin >> imie;
+
+        cout << "Prosze podac nazwisko studenta: ";
+        cin >> nazwisko;
+
+
+        cout << "Prosze podac numer albumu studenta: ";
+        cin >> nrAlbumu;
+
+
+        cout << "Prosze podac identyfikator studenta: ";
+        cin >> identyfikator;
+
+
+        cout << "Prosze podac date urodzenia studenta (dd/mm/rrrr): ";
+        cin >> dataUrodzenia;
+
+        fabryka = new FabrykaPortugalczykow;
+        student = fabryka->stoworzStudenta(imie, nazwisko, identyfikator, dataUrodzenia, nrAlbumu);
+
+        lista->dodajOsobe(student);
         break;
     case 3:
         return 0;
@@ -86,63 +167,7 @@ int Interfejs::menuFabrykiStudentow()
     return 1;
 }
 
-void Interfejs::dodawanieStudentow(Student* student)
-{
-    string tmp;
-    int pmt = NULL;
-
-    cout << "Prosze podac imie studenta: ";
-    cin >> tmp;
-    if (student->setImie(tmp) == 0)
-    {
-        cout << "OK" << endl << endl;
-    }
-    tmp.clear();
-
-    cout << "Prosze podac nazwisko studenta: ";
-    cin >> tmp;
-    if (student->setNazwisko(tmp) == 0)
-    {
-        cout << "OK" << endl << endl;
-    }
-    tmp.clear();
-
-    cout << "Prosze podac numer albumu studenta: ";
-    cin >> pmt;
-    if (student->setNrAlbumu(pmt) == 0)
-    {
-        cout << "OK" << endl << endl;
-    }
-    pmt=NULL;
-
-    cout << "Prosze podac identyfikator studenta: ";
-    cin >> tmp;
-    if (student->setIdentyfikator(tmp) == 0)
-    {
-        cout << "OK" << endl << endl;
-    }
-    else
-    {
-        cout << "Nieprawidlowy identyfikator dla danej narodowosci." << endl << endl;
-    }
-    tmp.clear();
-
-    cout << "Prosze podac date urodzenia studenta (dd/mm/rrrr): ";
-    cin >> tmp;
-    if (student->setDataUrodzenia(tmp) == 0)
-    {
-        cout << "OK" << endl << endl;
-    }
-    else
-    {
-        cout << "Nieprawidlowa data urodzenia studenta." << endl << endl;
-    }
-    tmp.clear();
-
-    this->lista.dodajOsobe(student);
-}
-
-void Interfejs::ustawianieObecnosciStudentow()
+void Interfejs::ustawianieObecnosciStudentow(ListaObecnosci* lista)
 {
     string identyfikator, data;
     bool obecnosc;
@@ -155,25 +180,31 @@ void Interfejs::ustawianieObecnosciStudentow()
     cin >> tmp;
     obecnosc = tmp;
 
-    tmp = this->lista.ustawObecnosc(identyfikator, data, obecnosc);
-    if (tmp != 0)
-    {
-        if (tmp == 1)
-            cout << "Osoby nie ma na liscie.\n";
-        else if (tmp == 2)
-            cout << "Brak miejsca w tablicy obecnosci.\n";
-        else if (tmp == 3)
-            cout << "Obecnosc juz ustawiona.\n";
-        else
-            cout << "Pusta lista osob.\n";
-    }
-    else
-    {
-        cout << "OK" << endl;
-    }
-}
+    system("cls");
 
-void Interfejs::wyswietlanieObecnosciStudentow()
+    switch (lista->ustawObecnosc(identyfikator, data, obecnosc))
+    {
+    case 0:
+        cout << "OK\n";
+        break;
+    case 1:
+        cout << "Obecnosc juz ustawiona.\n";
+        break;
+    case 2:
+        cout << "Brak miejsca na liscie.\n";
+        break;
+    case 3:
+        cout << "Nie ma takiej osoby.\n";
+        break;
+    case 4:
+        cout << "Lista studentow jest pusta.\n";
+        break;
+    default:
+        break;
+    }
+    }
+
+void Interfejs::wyswietlanieObecnosciStudentow(ListaObecnosci* lista)
 {
     string identyfikator, data;
     cout << "Prosze podac identyfikator studenta: ";
@@ -182,6 +213,25 @@ void Interfejs::wyswietlanieObecnosciStudentow()
     cin >> data;
 
     system("cls");
-
-    this->lista.wyswietlObecnosc(identyfikator, data);
+    switch (lista->wyswietlObecnosc(identyfikator, data))
+    {
+    case 0:
+        cout << "Osoba byla obecna.\n";
+        break;
+    case 1:
+        cout << "Osoba byla nieobecna.\n";
+        break;
+    case 2:
+        cout << "Lista pusta.\n";
+        break;
+    case 3:
+        cout << "Brak zajec o takiej dacie.\n";
+        break;
+    case 4:
+        cout << "Brak osoby na liscie.\n";
+        break;
+    default:
+        break;
+    }
+    
 }

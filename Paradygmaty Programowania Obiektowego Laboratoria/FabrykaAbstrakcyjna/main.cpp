@@ -2,8 +2,10 @@
 
 int main()
 {
-    Interfejs IO{};
-    IO.menuListyObecnosci();
+    ListaObecnosci* lista = new ListaObecnosci();
+
+
+    Interfejs* gui = new Interfejs(lista);
     
 
     return 0;

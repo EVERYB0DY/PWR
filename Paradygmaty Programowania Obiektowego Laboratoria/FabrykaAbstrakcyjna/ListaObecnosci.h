@@ -2,7 +2,7 @@
 #include <string>
 #include "Student.h"
 
-class ListaObecosci
+class ListaObecnosci
 {
 private:
 	struct
@@ -14,7 +14,7 @@ private:
 
 public:
 	int dodajOsobe(Student *student);
-	int wyswietlListe();
+	std::string wyswietlListe(int liczba);
 	int ustawObecnosc(std::string identyfikator, std::string data, bool czyObecny);
-	void wyswietlObecnosc(std::string identyfikator, std::string data);
+	int wyswietlObecnosc(std::string identyfikator, std::string data);
 };

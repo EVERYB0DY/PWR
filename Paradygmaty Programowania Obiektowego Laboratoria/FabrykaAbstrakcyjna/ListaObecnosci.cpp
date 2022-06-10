@@ -1,25 +1,21 @@
 #include "ListaObecnosci.h"
 #include <iostream>
 
-int ListaObecosci::dodajOsobe(Student* student)
+int ListaObecnosci::dodajOsobe(Student* student)
 {
 	for (int i = 0; i < 30; i++)
 	{
-		Student* tmp;
-		tmp = listaStudentow[i];
-		if (tmp != NULL)
+		if (this->listaStudentow[i] != NULL)
 		{
 			
-			if (tmp->getIdentyfikator() == student->getIdentyfikator())
+			if (this->listaStudentow[i]->getIdentyfikator() == student->getIdentyfikator())
 			{
-				delete tmp;
 				return 1;
 			}
 			
 		}
 		else
 		{
-			delete tmp;
 			this->listaStudentow[i] = student;
 			return 0;
 		}
@@ -27,100 +23,91 @@ int ListaObecosci::dodajOsobe(Student* student)
 	return 2;
 }
 
-int ListaObecosci::wyswietlListe()
+std::string ListaObecnosci::wyswietlListe(int liczba)
 {
-	if (this->listaStudentow[0] == NULL)
-	{
-		return 1;
-	}
-
-	for (int i = 0; i < 30; i++)
-	{
-		Student* tmp;
-		tmp = listaStudentow[i];
-		std::cout << i+1 << ". " << tmp->getImie() << " " << tmp->getNazwisko() << " " << tmp->getNrAlbumu() << "\n";
-		delete tmp;
-	}
-	return 0;
+	if (this->listaStudentow[liczba] != NULL)
+		return this->listaStudentow[liczba]->getImie() + " " + this->listaStudentow[liczba]->getNazwisko() + " " + std::to_string(this->listaStudentow[liczba]->getNrAlbumu());
+	
+	return std::to_string(NULL);
 }
 
-int ListaObecosci::ustawObecnosc(std::string identyfikator, std::string data, bool czyObecny)
+int ListaObecnosci::ustawObecnosc(std::string identyfikator, std::string data, bool czyObecny)
 {
 	if (this->listaStudentow[0] == NULL)
 	{
 		return 4;
 	}
 
-	int numerNaLiscie = 0;
+	
 	for (int i = 0; i < 30; i++)
 	{
-		Student* tmp;
-		tmp = listaStudentow[i];
-		if (tmp->getIdentyfikator()==identyfikator)
+		if (this->listaStudentow[i]->getIdentyfikator()==identyfikator)
 		{
-			numerNaLiscie = i;
-		}
-		delete tmp;
-	}
-
-	if (numerNaLiscie == 0)
-	{
-		return 1;
-	}
-
-	for (int i = 0; i < 15; i++)
-	{
-		if (this->listaObecnosci[i].dataZajec == std::string())
-		{
-			this->listaObecnosci[i].dataZajec = data;
-		}
-
-		if (this->listaObecnosci[i].dataZajec == data)
-		{
-			if (this->listaObecnosci[i].obecnosc[numerNaLiscie] == NULL)
+			for (int j = 0; j < 15; j++)
 			{
-				this->listaObecnosci[i].obecnosc[numerNaLiscie] = czyObecny;
-				return 0;
+				if (this->listaObecnosci[j].dataZajec == std::string())
+				{
+					this->listaObecnosci[j].dataZajec = data;
+				}
+
+				if (this->listaObecnosci[j].dataZajec == data)
+				{
+					if (this->listaObecnosci[j].obecnosc[i] == NULL)
+					{
+						this->listaObecnosci[j].obecnosc[i] = czyObecny;
+						return 0;
+					}
+					return 1;
+				}
 			}
-			return 3;
+			return 2;
+		}
+		if (this->listaStudentow[i + 1] == NULL)
+		{
+			break;
 		}
 	}
-	return 2;
+
+	
+	return 3;
 }
 
-void ListaObecosci::wyswietlObecnosc(std::string identyfikator, std::string data)
+int ListaObecnosci::wyswietlObecnosc(std::string identyfikator, std::string data)
 {
 	if (this->listaStudentow[0] == NULL)
 	{
-		std::cout << "Lista pusta.\n";
+		return 2;
 	}
 	else
 	{
-		int numerNaLiscie = 0;
 		for (int i = 0; i < 30; i++)
 		{
-			Student* tmp;
-			tmp = listaStudentow[i];
-			if (tmp->getIdentyfikator() == identyfikator)
+			if (this->listaStudentow[i]->getIdentyfikator() == identyfikator)
 			{
-				numerNaLiscie = i;
-			}
-			delete tmp;
-		}
+				for (int j = 0; j < 15; j++)
+				{
+					if (this->listaObecnosci[j].dataZajec == data)
+					{
+						if (this->listaObecnosci[j].obecnosc[i] == true)
+						{
+							return 0;
+						}
+						else
+						{
+							return 1;
+						}
+					}
+				}
 
-		for (int i = 0; i < 15; i++)
-		{
-			if (this->listaObecnosci[i].dataZajec == data)
+				return 3;
+			}
+
+			if (this->listaStudentow[i+1] == NULL)
 			{
-				if (this->listaObecnosci[i].obecnosc[numerNaLiscie] == true)
-				{
-					std::cout << "Osoba byla obecna.\n";
-				}
-				else
-				{
-					std::cout << "Osoba byla nieobecna.\n";
-				}
+				break;
 			}
 		}
+		return 4;
+
 	}
 }

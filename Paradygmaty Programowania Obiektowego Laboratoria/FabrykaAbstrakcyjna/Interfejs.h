@@ -6,13 +6,12 @@
 
 class Interfejs
 {
-private:
-	ListaObecosci lista{};
 public:
-	int menuListyObecnosci();
-	int menuFabrykiStudentow();
-	void dodawanieStudentow(Student* student);
-	void ustawianieObecnosciStudentow();
-	void wyswietlanieObecnosciStudentow();
+	Interfejs(){};
+	Interfejs(ListaObecnosci* lista);
+	int menuListyObecnosci(ListaObecnosci* lista);
+	int menuFabrykiStudentow(ListaObecnosci* lista);
+	void ustawianieObecnosciStudentow(ListaObecnosci* lista);
+	void wyswietlanieObecnosciStudentow(ListaObecnosci* lista);
 };
 
